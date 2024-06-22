@@ -14,17 +14,48 @@ datasource db {
 }
 
 model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+  user_id    Int       @id @default(autoincrement())
+  username   String    @unique
+  email      String    @unique
+  created_at DateTime  @default(now())
+  updated_at DateTime  @updatedAt
+  country_id Int
+  Address    Address[]
+
+  country Country @relation(fields: [country_id], references: [country_id])
+
+  @@map("user")
 }
 
-model Post {
-  id        Int      @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean? @default(false)
-  author    User?    @relation(fields: [authorId], references: [id])
-  authorId  Int?
+model Address {
+  address_id    Int      @id @default(autoincrement())
+  user_id       Int?
+  address_line1 String
+  address_line2 String
+  city          String
+  state         String
+  postal_code   String
+  country_id    Int
+  building_name String?
+  building_no   String?
+  remarks       String?
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+
+  User    User?   @relation(fields: [user_id], references: [user_id])
+  country Country @relation(fields: [country_id], references: [country_id])
+
+  @@map("address")
+}
+
+model Country {
+  country_id   Int       @id @default(autoincrement())
+  country_code String    @unique
+  country_name String    @unique
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  user         User[]
+  Address      Address[]
+
+  @@map("country")
 }
