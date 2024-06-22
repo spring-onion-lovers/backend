@@ -3,3 +3,5 @@ node_modules/
 .yarn
 .idea
 .vscode
+.env
+*.db
