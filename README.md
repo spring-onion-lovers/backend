@@ -8,9 +8,18 @@ https://www.postman.com/greatpinkshark/workspace/public/collection/18153423-c6f0
 $ yarn
 ```
 
+## Fill the .env file
+
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/dbname"
+```
+
 ## Running the app
 
 ```bash
+# seed the database
+$ yarn prisma db seed
+
 # development
 $ yarn run start
 
