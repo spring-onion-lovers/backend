@@ -80,7 +80,7 @@ export function fakeProductComplete() {
     name: faker.person.fullName(),
     description: faker.lorem.words(5),
     category_id: faker.number.int(),
-    brand_id: faker.number.int(),
+    brand_id: undefined,
     created_at: new Date(),
     updated_at: faker.date.anytime(),
   };
