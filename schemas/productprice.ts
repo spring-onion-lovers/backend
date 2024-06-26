@@ -1,4 +1,4 @@
-import * as z from 'zod';
+import * as z from "zod"
 
 export const ProductPriceModel = z.object({
   price_id: z.number().int(),
@@ -8,4 +8,4 @@ export const ProductPriceModel = z.object({
   price: z.number(),
   created_at: z.date(),
   updated_at: z.date(),
-});
+})

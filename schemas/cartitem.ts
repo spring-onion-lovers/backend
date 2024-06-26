@@ -1,5 +1,4 @@
 import * as z from "zod"
-import * as imports from "../../prisma/null"
 
 export const CartItemModel = z.object({
   cart_item_id: z.number().int(),
