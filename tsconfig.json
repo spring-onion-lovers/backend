@@ -1,5 +1,7 @@
 {
   "compilerOptions": {
+    //    https://github.com/colinhacks/zod/issues/43
+    "strict": true,
     "module": "commonjs",
     "declaration": true,
     "removeComments": true,
@@ -12,7 +14,6 @@
     "baseUrl": "./",
     "incremental": true,
     "skipLibCheck": true,
-    "strictNullChecks": false,
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
