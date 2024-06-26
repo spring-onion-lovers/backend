@@ -46,6 +46,7 @@ export class ProductsService {
   findAll(query: FindProductDto) {
     return this.prismaService.product.findMany({
       include: {
+        Category: true,
         ProductPrice: {
           include: {
             country: true,
@@ -98,6 +99,7 @@ export class ProductsService {
   findOne(id: number) {
     return this.prismaService.product.findFirst({
       include: {
+        Category: true,
         ProductPrice: {
           include: {
             country: true,
