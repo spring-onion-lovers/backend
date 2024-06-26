@@ -24,6 +24,7 @@ import { UsersModule } from './users/users.module';
     ConfigModule.forRoot(),
     CategoryModule,
     ProductsModule,
+    UsersModule,
   ],
   controllers: [AppController],
   providers: [AppService],
