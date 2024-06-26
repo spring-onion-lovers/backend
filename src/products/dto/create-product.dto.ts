@@ -4,7 +4,7 @@ import {
   ProductModel,
   ProductPriceModel,
   ShippingMethodModel,
-} from '../../schemas';
+} from '../../../schemas';
 
 const CreateProductSchema = ProductModel.omit({
   product_id: true,

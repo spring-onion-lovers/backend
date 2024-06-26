@@ -4,7 +4,7 @@ import {
   ProductModel,
   ProductPriceModel,
   ShippingMethodModel,
-} from '../../schemas';
+} from '../../../schemas';
 import { z } from 'zod';
 
 const FindProductSchema = z.object({

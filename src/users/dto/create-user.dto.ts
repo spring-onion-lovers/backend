@@ -1,5 +1,5 @@
 import { createZodDto } from 'nestjs-zod';
-import { AddressModel, UserModel } from '../../schemas';
+import { AddressModel, UserModel } from '../../../schemas';
 import { CreateProductDto } from '../../products/dto/create-product.dto';
 
 const CreateUserSchema = UserModel.omit({

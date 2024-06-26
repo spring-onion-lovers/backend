@@ -2,7 +2,7 @@ import { Injectable, Query } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { UpdateProductDto } from './dto/update-product.dto';
 import { z } from 'zod';
-import { ProductModel } from '../schemas';
+import { ProductModel } from '../../schemas';
 import { PrismaService } from '../prisma/prisma.service';
 import { FindProductDto } from './dto/find-product.dto';
 
