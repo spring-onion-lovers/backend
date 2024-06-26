@@ -258,19 +258,57 @@ const countryListAlpha2 = {
   AX: 'Åland Islands',
 };
 
+const product_categories = [
+  'beauty',
+  'fragrances',
+  'furniture',
+  'groceries',
+  'electronics',
+  'home appliances',
+  'home entertainment',
+  'home decoration',
+  'kitchen accessories',
+  'laptops',
+  'mens shirts',
+  'mens shoes',
+  'mens watches',
+  'mobile accessories',
+  'motorcycle',
+  'skin care',
+  'smartphones',
+  'sports accessories',
+  'sunglasses',
+  'tablets',
+  'tops',
+  'vehicle',
+  'tools',
+  'womens bags',
+  'womens dresses',
+  'womens jewellery',
+  'womens shoes',
+  'womens watches',
+];
+
 const prisma = new PrismaService();
 
-const insertArray = Object.keys(countryListAlpha2).map((countryCode) => {
-  const countryName = countryListAlpha2[countryCode];
-  return {
-    country_code: countryCode,
-    country_name: countryName,
-  };
-});
-
 async function insertIntoCountriesTable() {
+  const insertArray = Object.keys(countryListAlpha2).map((countryCode) => {
+    const countryName = countryListAlpha2[countryCode];
+    return {
+      country_code: countryCode,
+      country_name: countryName,
+    };
+  });
+
   return prisma.country.createMany({
     data: insertArray,
+    skipDuplicates: true,
+  });
+}
+
+async function insertCategories() {
+  return prisma.productCategory.createMany({
+    data: product_categories.map((category) => ({ name: category })),
     skipDuplicates: true,
   });
 }
@@ -308,6 +346,8 @@ async function main() {
     console.log('Countries inserted successfully');
     await insertUsers();
     console.log('Users inserted successfully');
+    await insertCategories();
+    console.log('Categories inserted successfully');
   } catch (error) {
     console.error('Error inserting countries', error);
   } finally {
