@@ -6,17 +6,24 @@ import { PrismaService } from './prisma/prisma.service';
 import { CategoryService } from './category/category.service';
 import { RouterModule } from '@nestjs/core';
 import { CategoryModule } from './category/category.module';
+import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    CategoryModule,
     RouterModule.register([
       {
         path: 'category',
         module: CategoryModule,
       },
+      {
+        path: 'product',
+        module: ProductsModule,
+      },
     ]),
+    ConfigModule.forRoot(),
+    CategoryModule,
+    ProductsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
