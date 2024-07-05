@@ -37,7 +37,13 @@ $ yarn prisma db push # Syncs the Prisma schema to the database
 $ yarn prisma db seed # Seeds the database (see seed.ts)
 ```
 
-## 5. Run the app
+## 5. Start Prisma Studio
+This will open a web interface to interact with the database. Think of it as a lightweight PGAdmin.
+```bash
+$ yarn prisma studio
+```
+
+## 5. Run the server
 ```bash
 # watch mode
 $ yarn run start:dev
