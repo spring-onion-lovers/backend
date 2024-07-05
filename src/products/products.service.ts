@@ -49,7 +49,18 @@ export class ProductsService {
   findAll(query: FindProductDto) {
     return this.prismaService.product.findMany({
       include: {
+        Brand: true,
+        ShippingMethod: true,
         Category: true,
+        Reviews: {
+          include: {
+            User: {
+              select: {
+                username: true,
+              }
+            }
+          }
+        },
         ProductImage: true,
         ProductPrice: {
           include: {
@@ -103,7 +114,18 @@ export class ProductsService {
   findOne(id: number) {
     return this.prismaService.product.findFirst({
       include: {
+        Brand: true,
+        ShippingMethod: true,
         Category: true,
+        Reviews: {
+          include: {
+            User: {
+              select: {
+                username: true,
+              }
+            }
+          }
+        },
         ProductImage: true,
         ProductPrice: {
           include: {

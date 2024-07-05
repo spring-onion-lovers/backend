@@ -8,6 +8,7 @@ import { CategoryModule } from './category/category.module'
 import { JwtService } from './jwt/jwt.service'
 import { ProductsModule } from './products/products.module'
 import { UsersModule } from './users/users.module'
+import { CartModule } from './cart/cart.module';
 
 @Module({
   imports: [
@@ -24,12 +25,17 @@ import { UsersModule } from './users/users.module'
         path: 'auth',
         module: AuthModule,
       },
+      {
+        path: 'cart',
+        module: CartModule,
+      }
     ]),
     ConfigModule.forRoot(),
     CategoryModule,
     ProductsModule,
     UsersModule,
     AuthModule,
+    CartModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
