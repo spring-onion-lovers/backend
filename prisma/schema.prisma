@@ -90,10 +90,6 @@ model Country {
   updated_at          DateTime              @updatedAt
   user                User[]
   Address             Address[]
-  ProductPrice        ProductPrice[]
-  ProductAvailability ProductAvailability[]
-  ShippingMethod      ShippingMethod[]
-  PurchaseItem        PurchaseItem[]
 
   @@map("country")
 }
@@ -120,13 +116,13 @@ model Product {
   brand_id            Int?
   created_at          DateTime              @default(now())
   updated_at          DateTime              @updatedAt
-  ProductPrice        ProductPrice[]
-  ProductAvailability ProductAvailability[]
+  stock               Int                  @default(1)
+  price               Float               @default(1)
+  currency            String                @default("SGD")
 
   Brand          ProductBrand?    @relation(fields: [brand_id], references: [brand_id])
   Category       ProductCategory  @relation(fields: [category_id], references: [category_id])
   CartItem       CartItem[]
-  ShippingMethod ShippingMethod[]
   Purchase       Purchase[]
   PurchaseItem   PurchaseItem[]
 
@@ -154,55 +150,6 @@ model ProductBrand {
   Product    Product[]
 }
 
-model ProductPrice {
-  price_id   Int    @id @default(autoincrement())
-  product_id Int
-  country_id Int
-  currency   String
-  price      Float
-
-  created_at DateTime @default(now())
-  updated_at DateTime @updatedAt
-
-  product Product @relation(fields: [product_id], references: [product_id])
-  country Country @relation(fields: [country_id], references: [country_id])
-
-  @@map("product_price")
-}
-
-model ProductAvailability {
-  availability_id Int      @id @default(autoincrement())
-  product_id      Int
-  country_id      Int
-  stock           Int
-  is_available    Boolean
-  created_at      DateTime @default(now())
-  updated_at      DateTime @updatedAt
-
-  product Product @relation(fields: [product_id], references: [product_id])
-  country Country @relation(fields: [country_id], references: [country_id])
-
-  @@map("product_availability")
-}
-
-model ShippingMethod {
-  shipping_method_id Int      @id @default(autoincrement())
-  product_id         Int
-  country_id         Int
-  shipping_method    String
-  estimated_days     Int
-  currency           String
-  price              Float
-  created_at         DateTime @default(now())
-  updated_at         DateTime @updatedAt
-
-  product  Product    @relation(fields: [product_id], references: [product_id])
-  country  Country    @relation(fields: [country_id], references: [country_id])
-  Purchase Purchase[]
-
-  @@map("shipping_method")
-}
-
 // ================== Cart ==================
 model CartItem {
   cart_item_id Int      @id @default(autoincrement())
@@ -223,7 +170,6 @@ model Purchase {
   purchase_id        Int   @id @default(autoincrement())
   user_id            Int
   address_id         Int
-  shipping_method_id Int
   tax_amount         Float
   total_price        Float
   final_price        Float
@@ -232,7 +178,6 @@ model Purchase {
   updated_at DateTime @updatedAt
 
   User              User           @relation(fields: [user_id], references: [user_id])
-  ShippingMethod    ShippingMethod @relation(fields: [shipping_method_id], references: [shipping_method_id])
   Address           Address        @relation(fields: [address_id], references: [address_id])
   PurchaseItem      PurchaseItem[]
   Product           Product?       @relation(fields: [productProduct_id], references: [product_id])
@@ -245,7 +190,6 @@ model PurchaseItem {
   purchase_item_id  Int     @id @default(autoincrement())
   purchase_id       Int
   product_id        Int
-  country_id        Int
   quantity          Int
   price             Float
   stripe_payment_id String?
@@ -255,7 +199,6 @@ model PurchaseItem {
 
   Purchase Purchase @relation(fields: [purchase_id], references: [purchase_id])
   Product  Product  @relation(fields: [product_id], references: [product_id])
-  Country  Country  @relation(fields: [country_id], references: [country_id])
 
   @@map("purchase_item")
 }

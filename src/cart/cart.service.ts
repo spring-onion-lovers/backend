@@ -71,7 +71,8 @@ export class CartService {
             brand_id: true,
             category_id: true,
             Brand: true,
-            ShippingMethod: true,
+            price: true,
+            stock: true,
             Reviews: {
               include: {
                 User: {
@@ -85,16 +86,7 @@ export class CartService {
             updated_at: true,
             Category: true,
             ProductImage: true,
-            ProductPrice: {
-              include: {
-                country: true,
-              },
-            },
-            ProductAvailability: {
-              include: {
-                country: true,
-              },
-            },
+
           }
         }
       }

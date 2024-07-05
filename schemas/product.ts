@@ -8,4 +8,7 @@ export const ProductModel = z.object({
   brand_id: z.number().int().nullish(),
   created_at: z.date(),
   updated_at: z.date(),
+  stock: z.number().int(),
+  price: z.number(),
+  currency: z.string(),
 })

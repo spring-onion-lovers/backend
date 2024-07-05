@@ -98,6 +98,9 @@ export function fakeProductComplete() {
     brand_id: undefined,
     created_at: new Date(),
     updated_at: faker.date.anytime(),
+    stock: 1,
+    price: 1,
+    currency: 'SGD',
   };
 }
 export function fakeProductCategory() {
@@ -126,64 +129,6 @@ export function fakeProductBrandComplete() {
   return {
     brand_id: faker.number.int(),
     name: faker.person.fullName(),
-    created_at: new Date(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeProductPrice() {
-  return {
-    currency: faker.lorem.words(5),
-    price: faker.number.float(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeProductPriceComplete() {
-  return {
-    price_id: faker.number.int(),
-    product_id: faker.number.int(),
-    country_id: faker.number.int(),
-    currency: faker.lorem.words(5),
-    price: faker.number.float(),
-    created_at: new Date(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeProductAvailability() {
-  return {
-    stock: faker.number.int(),
-    is_available: faker.datatype.boolean(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeProductAvailabilityComplete() {
-  return {
-    availability_id: faker.number.int(),
-    product_id: faker.number.int(),
-    country_id: faker.number.int(),
-    stock: faker.number.int(),
-    is_available: faker.datatype.boolean(),
-    created_at: new Date(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeShippingMethod() {
-  return {
-    shipping_method: faker.lorem.words(5),
-    estimated_days: faker.number.int(),
-    currency: faker.lorem.words(5),
-    price: faker.number.float(),
-    updated_at: faker.date.anytime(),
-  };
-}
-export function fakeShippingMethodComplete() {
-  return {
-    shipping_method_id: faker.number.int(),
-    product_id: faker.number.int(),
-    country_id: faker.number.int(),
-    shipping_method: faker.lorem.words(5),
-    estimated_days: faker.number.int(),
-    currency: faker.lorem.words(5),
-    price: faker.number.float(),
     created_at: new Date(),
     updated_at: faker.date.anytime(),
   };
@@ -217,7 +162,6 @@ export function fakePurchaseComplete() {
     purchase_id: faker.number.int(),
     user_id: faker.number.int(),
     address_id: faker.number.int(),
-    shipping_method_id: faker.number.int(),
     tax_amount: faker.number.float(),
     total_price: faker.number.float(),
     final_price: faker.number.float(),
@@ -239,7 +183,6 @@ export function fakePurchaseItemComplete() {
     purchase_item_id: faker.number.int(),
     purchase_id: faker.number.int(),
     product_id: faker.number.int(),
-    country_id: faker.number.int(),
     quantity: faker.number.int(),
     price: faker.number.float(),
     stripe_payment_id: undefined,
