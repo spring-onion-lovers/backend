@@ -1,31 +1,31 @@
 import {
+  Body,
   Controller,
   Get,
-  Post,
-  Body,
-  Patch,
-  Param,
-  Delete,
-  UsePipes,
-  Query,
   NotFoundException,
-} from '@nestjs/common';
-import { ProductsService } from './products.service';
-import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { ZodValidationPipe } from 'nestjs-zod';
-import OKResponse, { OKResponsePaginated } from '../../utilities/OKResponse';
-import { FindProductDto } from './dto/find-product.dto';
+  Param,
+  Post,
+  Query,
+  UseGuards,
+  UsePipes,
+} from '@nestjs/common'
+import { ZodValidationPipe } from 'nestjs-zod'
+import OKResponse from '../../utilities/OKResponse'
+import { JwtGuard } from '../jwt/jwt.guard'
+import { CreateProductDto } from './dto/create-product.dto'
+import { FindProductDto } from './dto/find-product.dto'
+import { ProductsService } from './products.service'
 
 @UsePipes(ZodValidationPipe)
+@UseGuards(JwtGuard)
 @Controller()
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
   @Post()
   async create(@Body() createProductDto: CreateProductDto) {
-    const res = await this.productsService.create(createProductDto);
-    return new OKResponse(res);
+    const res = await this.productsService.create(createProductDto)
+    return new OKResponse(res)
   }
 
   @Get()
@@ -33,17 +33,17 @@ export class ProductsController {
     return new OKResponse(
       await this.productsService.findAll(findProductDto),
       'Products Found',
-    );
+    )
   }
 
   @Get(':id')
   async findOne(@Param('id') id: string) {
-    const res = await this.productsService.findOne(+id);
+    const res = await this.productsService.findOne(+id)
     if (!res) {
-      throw new NotFoundException('Product not found');
+      throw new NotFoundException('Product not found')
     }
 
-    return new OKResponse(res);
+    return new OKResponse(res)
   }
 
   // @Patch(':id')

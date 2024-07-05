@@ -67,6 +67,21 @@ export function fakeCountryComplete() {
     updated_at: faker.date.anytime(),
   };
 }
+export function fakeProductImage() {
+  return {
+    image_url: faker.lorem.words(5),
+    updated_at: faker.date.anytime(),
+  };
+}
+export function fakeProductImageComplete() {
+  return {
+    product_image_id: faker.number.int(),
+    product_id: faker.number.int(),
+    image_url: faker.lorem.words(5),
+    created_at: new Date(),
+    updated_at: faker.date.anytime(),
+  };
+}
 export function fakeProduct() {
   return {
     name: faker.person.fullName(),
@@ -228,6 +243,24 @@ export function fakePurchaseItemComplete() {
     quantity: faker.number.int(),
     price: faker.number.float(),
     stripe_payment_id: undefined,
+    created_at: new Date(),
+    updated_at: faker.date.anytime(),
+  };
+}
+export function fakeReviews() {
+  return {
+    rating: faker.number.int(),
+    review_text: faker.lorem.words(5),
+    updated_at: faker.date.anytime(),
+  };
+}
+export function fakeReviewsComplete() {
+  return {
+    review_id: faker.number.int(),
+    user_id: faker.number.int(),
+    product_id: faker.number.int(),
+    rating: faker.number.int(),
+    review_text: faker.lorem.words(5),
     created_at: new Date(),
     updated_at: faker.date.anytime(),
   };

@@ -1,7 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UseGuards } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
+import { JwtGuard } from '../jwt/jwt.guard';
 
 @Injectable()
+@UseGuards(JwtGuard)
 export class CategoryService {
   constructor(private prismaService: PrismaService) {}
 

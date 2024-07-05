@@ -53,6 +53,7 @@ model User {
   country  Country    @relation(fields: [country_id], references: [country_id])
   CartItem CartItem[]
   Purchase Purchase[]
+  Reviews  Reviews[]
 
   @@map("user")
 }
@@ -99,6 +100,18 @@ model Country {
 
 // ================== Product ==================
 
+model ProductImage {
+  product_image_id Int      @id @default(autoincrement())
+  product_id       Int
+  image_url        String
+  created_at       DateTime @default(now())
+  updated_at       DateTime @updatedAt
+
+  product Product @relation(fields: [product_id], references: [product_id])
+
+  @@map("product_image")
+}
+
 model Product {
   product_id          Int                   @id @default(autoincrement())
   name                String
@@ -116,6 +129,9 @@ model Product {
   ShippingMethod ShippingMethod[]
   Purchase       Purchase[]
   PurchaseItem   PurchaseItem[]
+
+  ProductImage ProductImage[]
+  Reviews      Reviews[]
 
   @@map("product")
 }
@@ -242,4 +258,20 @@ model PurchaseItem {
   Country  Country  @relation(fields: [country_id], references: [country_id])
 
   @@map("purchase_item")
+}
+
+// ================== Reviews ==================
+model Reviews {
+  review_id   Int      @id @default(autoincrement())
+  user_id     Int
+  product_id  Int
+  rating      Int
+  review_text String
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+
+  User    User    @relation(fields: [user_id], references: [user_id])
+  Product Product @relation(fields: [product_id], references: [product_id])
+
+  @@map("reviews")
 }
