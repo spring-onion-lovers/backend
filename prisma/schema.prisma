@@ -123,7 +123,6 @@ model Product {
   Brand          ProductBrand?    @relation(fields: [brand_id], references: [brand_id])
   Category       ProductCategory  @relation(fields: [category_id], references: [category_id])
   CartItem       CartItem[]
-  Purchase       Purchase[]
   PurchaseItem   PurchaseItem[]
 
   ProductImage ProductImage[]
@@ -180,8 +179,6 @@ model Purchase {
   User              User           @relation(fields: [user_id], references: [user_id])
   Address           Address        @relation(fields: [address_id], references: [address_id])
   PurchaseItem      PurchaseItem[]
-  Product           Product?       @relation(fields: [productProduct_id], references: [product_id])
-  productProduct_id Int?
 
   @@map("purchase")
 }
@@ -197,7 +194,7 @@ model PurchaseItem {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  Purchase Purchase @relation(fields: [purchase_id], references: [purchase_id])
+  Purchase Purchase @relation(fields: [purchase_id], references: [purchase_id], onDelete: Cascade)
   Product  Product  @relation(fields: [product_id], references: [product_id])
 
   @@map("purchase_item")
