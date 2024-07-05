@@ -1,31 +1,44 @@
 ## Postman Collection
+[Click Here](https://www.postman.com/greatpinkshark/workspace/public/collection/18153423-c6f00462-13ff-44e1-9f33-8c04daab68c9?action=share&creator=18153423)
+> [!IMPORTANT]  
+> For login, you can pick a random email from the users table (by using Prisma Studio or PGAdmin) and use random letters as the password to login and receive the token. Then, use the token in your Requests by changing the "Authorization" to Bearer and the token to the response.
 
-https://www.postman.com/greatpinkshark/workspace/public/collection/18153423-c6f00462-13ff-44e1-9f33-8c04daab68c9?action=share&creator=18153423
+# Development
 
-## Installation
-
+## 1. Setup
+Installs the dependencies.
 ```bash
 $ yarn
 ```
 
-## Fill the .env file
+## 2. Docker (Optional) – For database setup.
 
-```env
-DATABASE_URL="postgresql://username:password@localhost:5432/dbname"
-```
-
-## Running the app
+If you're not using Docker, you can skip this step and setup your database manually. Mind that we're using PostgreSQL.
 
 ```bash
-# seed the database
-$ yarn prisma db seed
+# start the container
+$ docker-compose up -d
+# Database URL: postgresql://postgres:postgres@localhost:5434/?schema=public
+````
 
-# development
-$ yarn run start
+## 3. Fill the .env file
+Yeah, it's important. Trust me. Also, avoid port 3000.
+> [!NOTE]  
+> If you're using docker (as shown in the previous step, you can use the following URL):
 
+```bash
+DATABASE_URL=postgresql://postgres:postgres@localhost:5434/?schema=public
+```
+
+## 4. Sync Prisma to database and seed the db
+This will create the tables and seed the database with some data.
+```bash
+$ yarn prisma db push # Syncs the Prisma schema to the database
+$ yarn prisma db seed # Seeds the database (see seed.ts)
+```
+
+## 5. Run the app
+```bash
 # watch mode
 $ yarn run start:dev
-
-# production mode
-$ yarn run start:prod
 ```
