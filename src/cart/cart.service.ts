@@ -18,6 +18,22 @@ export class CartService {
     })
   }
 
+  findCartItemsByCartItemIds(user_id: number, cart_item_ids: number[]) {
+    return this.prisma.cartItem.findMany({
+      select: {
+        quantity: true,
+        product_id: true,
+        Product: true
+      },
+      where: {
+        user_id,
+        cart_item_id: {
+          in: cart_item_ids
+        }
+      }
+    })
+  }
+
 
   findOneByCartItemId(user_id: number, cart_item_id: number) {
     return this.prisma.cartItem.findFirst({
@@ -27,7 +43,6 @@ export class CartService {
       }
     })
   }
-
 
   async addProductToCart(user_id: number, addProductToCartDto: AddProductToCartDto) {
     try {
