@@ -1,8 +1,5 @@
-import { Injectable, Query } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
-import { UpdateProductDto } from './dto/update-product.dto';
-import { z } from 'zod';
-import { ProductModel } from '../../schemas';
 import { PrismaService } from '../prisma/prisma.service';
 import { FindProductDto } from './dto/find-product.dto';
 
@@ -20,10 +17,16 @@ export class ProductsService {
     delete productsOnly['price'];
     delete productsOnly['shipping_methods'];
     delete productsOnly['product_availability'];
+    delete productsOnly['image'];
 
     return this.prismaService.product.create({
       data: {
         ...productsOnly,
+        ProductImage: {
+          create: {
+            image_url: createProductDto.image_url,
+          },
+        },
         ProductPrice: {
           createMany: {
             data: createProductDto.price,
@@ -47,6 +50,7 @@ export class ProductsService {
     return this.prismaService.product.findMany({
       include: {
         Category: true,
+        ProductImage: true,
         ProductPrice: {
           include: {
             country: true,
@@ -100,6 +104,7 @@ export class ProductsService {
     return this.prismaService.product.findFirst({
       include: {
         Category: true,
+        ProductImage: true,
         ProductPrice: {
           include: {
             country: true,
