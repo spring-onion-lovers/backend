@@ -5,6 +5,7 @@
 //https://gist.github.com/incredimike/1469814
 import { PrismaService } from '../src/prisma/prisma.service';
 import { fakeAddress, fakeUser } from './fake-data';
+import { faker } from '@faker-js/faker';
 
 const countryListAlpha2 = {
   AF: 'Afghanistan',
@@ -314,6 +315,14 @@ async function insertCategories() {
 }
 
 async function insertUsers() {
+  // Fetch all users
+  const allUsers = await prisma.user.findMany();
+
+  if (allUsers.length > 0) {
+    console.log('Users already exist in the database. Not Inserting.');
+    return;
+  }
+
   const users = Array.from({ length: 10 }, () => {
     // Country_id (random number between 1 and 250)
     const country_id = Math.floor(Math.random() * 250) + 1;
@@ -340,14 +349,55 @@ async function insertUsers() {
   return Promise.all(promises);
 }
 
+async function insertProducts() {
+  const NUMBERS_OF_PRODUCTS = 40;
+  const allCategories = await prisma.productCategory.findMany();
+
+  const arr = Array.from({ length: NUMBERS_OF_PRODUCTS }, () => {
+    const randomCategoryId = Math.floor(Math.random() * allCategories.length);
+    return prisma.product.create({
+      data: {
+        category_id: allCategories[randomCategoryId].category_id,
+        currency: 'SGD',
+        name: faker.commerce.productName(),
+        description: faker.commerce.productDescription(),
+        price: faker.number.float({ min: 1, max: 150, fractionDigits: 2 }),
+        stock: 100,
+        ProductImage: {
+          create: {
+            image_url: 'https://via.placeholder.com/150',
+          },
+        },
+      },
+    });
+  });
+
+  Promise.all(arr)
+    .then(() => {
+      console.log('Products inserted successfully');
+    })
+    .catch((error) => {
+      console.error('Error inserting products', error);
+    });
+}
+
 async function main() {
   try {
+    console.log('[1] Inserting countries');
     await insertIntoCountriesTable();
-    console.log('Countries inserted successfully');
+    console.log('[1] Countries inserted successfully');
+
+    console.log('[2] Inserting users');
     await insertUsers();
-    console.log('Users inserted successfully');
+    console.log('[2] Users inserted successfully');
+
+    console.log('[3] Inserting categories');
     await insertCategories();
-    console.log('Categories inserted successfully');
+    console.log('[3] Categories inserted successfully');
+
+    console.log('[4] Inserting products');
+    await insertProducts();
+    console.log('[4] Products inserted successfully');
   } catch (error) {
     console.error('Error inserting countries', error);
   } finally {
