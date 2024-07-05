@@ -1,4 +1,8 @@
+# TrendCart Backend
+> Powered by Nest.js and Prisma. The most typesafe backend you'll ever see.
+
 ## Postman Collection
+The Postman collections includes sample responses.
 [Click Here](https://www.postman.com/greatpinkshark/workspace/public/collection/18153423-c6f00462-13ff-44e1-9f33-8c04daab68c9?action=share&creator=18153423)
 > [!IMPORTANT]  
 > For login, you can pick a random email from the users table (by using Prisma Studio or PGAdmin) and use random letters as the password to login and receive the token. Then, use the token in your Requests by changing the "Authorization" to Bearer and the token to the response.
