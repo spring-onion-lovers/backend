@@ -10,6 +10,7 @@ import { ProductsModule } from './products/products.module'
 import { UsersModule } from './users/users.module'
 import { CartModule } from './cart/cart.module';
 import { PurchaseModule } from './purchase/purchase.module';
+import { ReviewService } from './review/review.service';
 
 @Module({
   imports: [
