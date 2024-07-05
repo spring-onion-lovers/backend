@@ -1,14 +1,14 @@
 import {
   Body,
   Controller,
-  Get,
+  Get, HttpException,
   NotFoundException,
   Param,
   Post,
   Query,
   UseGuards,
   UsePipes,
-} from '@nestjs/common'
+} from '@nestjs/common';
 import { ZodValidationPipe } from 'nestjs-zod'
 import OKResponse from '../../utilities/OKResponse'
 import { JwtGuard } from '../jwt/jwt.guard'
@@ -18,6 +18,7 @@ import { ProductsService } from './products.service'
 import { ReviewService } from '../review/review.service';
 import { UserId } from '../user-id/user-id.decorator';
 import { CreateReviewDto } from '../review/dto/create-review.dto';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @UsePipes(ZodValidationPipe)
 @UseGuards(JwtGuard)
@@ -51,8 +52,21 @@ export class ProductsController {
 
   @Post(':id/review')
   async createReview(@UserId() userId: number, @Param('id') id: string, @Body() createReviewDto: CreateReviewDto) {
-    const res = await this.reviewService.createReview(userId, createReviewDto)
+    try{
+    const res = await this.reviewService.createReview(userId, +id, createReviewDto)
     return new OKResponse(res)
+
+    }catch(e){
+      if(e instanceof HttpException){
+        throw e
+      }
+
+      if(e instanceof PrismaClientKnownRequestError){
+        throw new NotFoundException('Product not found')
+      }
+
+      throw new HttpException('An error occurred while creating the review', 500)
+    }
   }
 
   // @Patch(':id')

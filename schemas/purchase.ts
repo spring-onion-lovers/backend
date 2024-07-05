@@ -9,5 +9,4 @@ export const PurchaseModel = z.object({
   final_price: z.number(),
   created_at: z.date(),
   updated_at: z.date(),
-  productProduct_id: z.number().int().nullish(),
 })

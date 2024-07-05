@@ -167,7 +167,6 @@ export function fakePurchaseComplete() {
     final_price: faker.number.float(),
     created_at: new Date(),
     updated_at: faker.date.anytime(),
-    productProduct_id: undefined,
   };
 }
 export function fakePurchaseItem() {
