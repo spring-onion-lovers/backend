@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { CreateProductDto } from './dto/create-product.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { FindProductDto } from './dto/find-product.dto';
-import {omit} from 'lodash'
-
+import { omit } from 'lodash';
 
 @Injectable()
 export class ProductsService {
@@ -16,7 +15,7 @@ export class ProductsService {
     //   ...createProductDto,
     // };
 
-    const productsOnly = omit(createProductDto, ['image_url'])
+    const productsOnly = omit(createProductDto, ['image_url']);
 
     return this.prismaService.product.create({
       data: {
@@ -40,9 +39,9 @@ export class ProductsService {
             User: {
               select: {
                 username: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         ProductImage: true,
       },
@@ -77,16 +76,17 @@ export class ProductsService {
             User: {
               select: {
                 username: true,
-              }
-            }
-          }
+              },
+            },
+          },
         },
         ProductImage: true,
       },
       where: {
+        product_id: id,
         stock: {
-          gte: 1
-        }
+          gte: 1,
+        },
       },
     });
   }
