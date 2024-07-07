@@ -103,7 +103,10 @@ export class AuthController {
       const data = await response.json();
 
       if (data.error)
-        throw new BadRequestException(data.error, 'Error getting TikTok token');
+        throw new BadRequestException(
+          data,
+          'There was an error exchanging the code for a token',
+        );
 
       const { access_token } = data;
 
@@ -118,8 +121,8 @@ export class AuthController {
         `Token generated for ${userInfo.open_id}`,
       );
     } catch (error) {
-      console.error(error);
-      throw error;
+      // console.error(error);
+      throw new BadRequestException(error);
     }
   }
 
