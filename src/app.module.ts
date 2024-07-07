@@ -11,6 +11,7 @@ import { UsersModule } from './users/users.module';
 import { CartModule } from './cart/cart.module';
 import { PurchaseModule } from './purchase/purchase.module';
 import { RecommendationModule } from './recommendation/recommendation.module';
+import { CountryModule } from './country/country.module';
 
 @Module({
   imports: [
@@ -48,6 +49,7 @@ import { RecommendationModule } from './recommendation/recommendation.module';
     CartModule,
     PurchaseModule,
     RecommendationModule,
+    CountryModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],
