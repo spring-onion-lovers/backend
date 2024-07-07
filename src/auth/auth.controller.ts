@@ -76,11 +76,6 @@ export class AuthController {
   //   return new OKResponse({ code, scope, state }, 'Callback received');
   // }
 
-  /**
-   *
-   * @param body {TokenExchangeDto}
-   * @returns {Promise<{open_id: string, scope: string, access_token: string, expires_in: number, refresh_token: string, refresh_expires_in: number, token_type: string}>}
-   */
   @Post('/tiktok/token')
   async getTiktokToken(@Body() body: TokenExchangeDto) {
     // https://developers.tiktok.com/doc/oauth-user-access-token-management

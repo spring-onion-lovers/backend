@@ -6,7 +6,10 @@
 import { PrismaService } from '../src/prisma/prisma.service';
 import { fakeAddress, fakeUser } from './fake-data';
 import { faker } from '@faker-js/faker';
-import { insertBulkProductsIntoRecommenderApi } from '../scripts/bindWithRecomenderApi';
+import {
+  insertBulkInteractionsIntoRecommenderApi,
+  insertBulkProductsIntoRecommenderApi,
+} from '../utilities/bindWithRecomenderApi';
 
 const countryListAlpha2 = {
   AF: 'Afghanistan',
@@ -351,6 +354,39 @@ async function insertUsers() {
   return Promise.all(promises);
 }
 
+async function insertInteractions() {
+  const allUsers = await prisma.user.findMany();
+  const allProducts = await prisma.product.findMany();
+
+  const interactionTypes = ['view', 'add_to_cart', 'purchase'] as const;
+
+  const interactions = Array.from({ length: 100 }, () => {
+    const randomUserId = Math.floor(Math.random() * allUsers.length);
+    const randomProductId = Math.floor(Math.random() * allProducts.length);
+
+    // random interaction type
+    const interaction =
+      interactionTypes[Math.floor(Math.random() * interactionTypes.length)];
+
+    return {
+      // interaction: faker.arrayElement(['view', 'add_to_cart', 'purchase']),
+      user_id: allUsers[randomUserId].user_id,
+      interaction: interaction,
+      product_id: allProducts[randomProductId].product_id,
+    };
+  });
+
+  const promises = interactions.map((interaction) => {
+    return prisma.interaction.create({
+      data: {
+        ...interaction,
+      },
+    });
+  });
+
+  return Promise.all(promises);
+}
+
 async function insertProducts() {
   const NUMBERS_OF_PRODUCTS = 40;
   const allCategories = await prisma.productCategory.findMany();
@@ -404,6 +440,14 @@ async function main() {
     console.log('[5] Inserting products into recommender API');
     await insertBulkProductsIntoRecommenderApi();
     console.log('[5] Products inserted into recommender API successfully');
+
+    console.log('[6] Inserting interactions');
+    await insertInteractions();
+    console.log('[6] Interactions inserted successfully');
+
+    console.log('[7] Inserting interactions');
+    await insertBulkInteractionsIntoRecommenderApi();
+    console.log('[7] Interactions inserted successfully');
   } catch (error) {
     console.error('Error inserting countries', error);
   } finally {

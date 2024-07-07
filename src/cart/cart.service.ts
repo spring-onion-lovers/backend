@@ -3,6 +3,7 @@ import { AddProductToCartDto } from './dto/add-product-to-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { InteractionType } from '../../utilities/interactionType';
+import { insertSingleInteractionIntoRecommenderApi } from '../../utilities/bindWithRecomenderApi';
 
 @Injectable()
 export class CartService {
@@ -66,6 +67,12 @@ export class CartService {
           product_id: addProductToCartDto.product_id,
           user_id,
         },
+      });
+
+      await insertSingleInteractionIntoRecommenderApi({
+        userId: user_id,
+        interaction: InteractionType.ADD_TO_CART,
+        productId: addProductToCartDto.product_id,
       });
 
       return await this.prisma.cartItem.create({

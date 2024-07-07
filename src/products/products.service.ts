@@ -4,6 +4,7 @@ import { PrismaService } from '../prisma/prisma.service';
 import { FindProductDto } from './dto/find-product.dto';
 import { omit } from 'lodash';
 import { InteractionType } from '../../utilities/interactionType';
+import { insertSingleInteractionIntoRecommenderApi } from '../../utilities/bindWithRecomenderApi';
 
 @Injectable()
 export class ProductsService {
@@ -75,6 +76,12 @@ export class ProductsService {
         product_id: id,
         user_id,
       },
+    });
+
+    await insertSingleInteractionIntoRecommenderApi({
+      userId: user_id,
+      interaction: InteractionType.VIEW,
+      productId: id,
     });
 
     return this.prismaService.product.findFirst({

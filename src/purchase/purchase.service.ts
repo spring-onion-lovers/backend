@@ -3,6 +3,7 @@ import { CreatePurchaseDto } from './dto/create-purchase.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartService } from '../cart/cart.service';
 import { InteractionType } from '../../utilities/interactionType';
+import { insertSingleInteractionIntoRecommenderApi } from '../../utilities/bindWithRecomenderApi';
 
 @Injectable()
 export class PurchaseService {
@@ -61,6 +62,12 @@ export class PurchaseService {
             product_id: cartItem.product_id,
             user_id,
           },
+        });
+
+        await insertSingleInteractionIntoRecommenderApi({
+          userId: user_id,
+          interaction: InteractionType.PURCHASE,
+          productId: cartItem.product_id,
         });
       }
     });
