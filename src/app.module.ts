@@ -1,16 +1,16 @@
-import { Module } from '@nestjs/common'
-import { ConfigModule } from '@nestjs/config'
-import { RouterModule } from '@nestjs/core'
-import { AppController } from './app.controller'
-import { AppService } from './app.service'
-import { AuthModule } from './auth/auth.module'
-import { CategoryModule } from './category/category.module'
-import { JwtService } from './jwt/jwt.service'
-import { ProductsModule } from './products/products.module'
-import { UsersModule } from './users/users.module'
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { RouterModule } from '@nestjs/core';
+import { AppController } from './app.controller';
+import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { CategoryModule } from './category/category.module';
+import { JwtService } from './jwt/jwt.service';
+import { ProductsModule } from './products/products.module';
+import { UsersModule } from './users/users.module';
 import { CartModule } from './cart/cart.module';
 import { PurchaseModule } from './purchase/purchase.module';
-import { ReviewService } from './review/review.service';
+import { RecommendationModule } from './recommendation/recommendation.module';
 
 @Module({
   imports: [
@@ -33,8 +33,12 @@ import { ReviewService } from './review/review.service';
       },
       {
         path: 'purchase',
-        module: PurchaseModule
-      }
+        module: PurchaseModule,
+      },
+      {
+        path: 'recommendation',
+        module: RecommendationModule,
+      },
     ]),
     ConfigModule.forRoot(),
     CategoryModule,
@@ -43,6 +47,7 @@ import { ReviewService } from './review/review.service';
     AuthModule,
     CartModule,
     PurchaseModule,
+    RecommendationModule,
   ],
   controllers: [AppController],
   providers: [AppService, JwtService],

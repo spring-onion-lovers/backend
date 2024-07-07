@@ -68,6 +68,33 @@ export class ProductsService {
     });
   }
 
+  async findFromProductIds(product_ids: number[]) {
+    return this.prismaService.product.findMany({
+      include: {
+        Brand: true,
+        Category: true,
+        Reviews: {
+          include: {
+            User: {
+              select: {
+                name: true,
+              },
+            },
+          },
+        },
+        ProductImage: true,
+      },
+      where: {
+        product_id: {
+          in: product_ids,
+        },
+        stock: {
+          gte: 1,
+        },
+      },
+    });
+  }
+
   async findOne(user_id: number, id: number) {
     // INJECT INTERACTION
     await this.prismaService.interaction.create({
