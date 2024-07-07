@@ -107,7 +107,6 @@ export function fakeProductComplete() {
 export function fakeProductCategory() {
   return {
     name: faker.person.fullName(),
-    parent_category_id: undefined,
     updated_at: faker.date.anytime(),
   };
 }
@@ -115,7 +114,6 @@ export function fakeProductCategoryComplete() {
   return {
     category_id: faker.number.int(),
     name: faker.person.fullName(),
-    parent_category_id: undefined,
     created_at: new Date(),
     updated_at: faker.date.anytime(),
   };

@@ -312,13 +312,22 @@ async function insertIntoCountriesTable() {
 }
 
 async function insertCategories() {
+  // Delete all existing categories
+  await prisma.productCategory.deleteMany();
+
   return prisma.productCategory.createMany({
-    data: product_categories.map((category) => ({ name: category })),
+    data: product_categories.map((category, index) => ({
+      category_id: index + 1,
+      name: category,
+    })),
     skipDuplicates: true,
   });
 }
 
 async function insertUsers() {
+  // Delete all existing users
+  await prisma.user.deleteMany();
+
   // Fetch all users
   const allUsers = await prisma.user.findMany();
 
@@ -327,11 +336,12 @@ async function insertUsers() {
     return;
   }
 
-  const users = Array.from({ length: 10 }, () => {
+  const users = Array.from({ length: 10 }, (item, index) => {
     // Country_id (random number between 1 and 250)
     const country_id = Math.floor(Math.random() * 250) + 1;
     return {
       ...fakeUser(),
+      user_id: index + 1,
       name: faker.person.fullName(),
       country_id,
       Address: {
@@ -391,10 +401,11 @@ async function insertProducts() {
   const NUMBERS_OF_PRODUCTS = 40;
   const allCategories = await prisma.productCategory.findMany();
 
-  const arr = Array.from({ length: NUMBERS_OF_PRODUCTS }, () => {
+  const arr = Array.from({ length: NUMBERS_OF_PRODUCTS }, (item, index) => {
     const randomCategoryId = Math.floor(Math.random() * allCategories.length);
     return prisma.product.create({
       data: {
+        product_id: index + 1,
         category_id: allCategories[randomCategoryId].category_id,
         currency: 'SGD',
         name: faker.commerce.productName(),

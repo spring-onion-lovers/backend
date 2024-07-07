@@ -51,7 +51,7 @@ model User {
   tiktok_open_id String    @unique
   Address        Address[]
 
-  country     Country       @relation(fields: [country_id], references: [country_id])
+  country     Country       @relation(fields: [country_id], references: [country_id], onDelete: Cascade)
   CartItem    CartItem[]
   Purchase    Purchase[]
   Reviews     Reviews[]
@@ -75,8 +75,8 @@ model Address {
   created_at    DateTime @default(now())
   updated_at    DateTime @updatedAt
 
-  User     User?      @relation(fields: [user_id], references: [user_id])
-  country  Country    @relation(fields: [country_id], references: [country_id])
+  User     User?      @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  country  Country    @relation(fields: [country_id], references: [country_id], onDelete: Cascade)
   Purchase Purchase[]
 
   @@map("address")
@@ -105,7 +105,7 @@ model ProductImage {
   created_at       DateTime @default(now())
   updated_at       DateTime @updatedAt
 
-  product Product @relation(fields: [product_id], references: [product_id])
+  product Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@map("product_image")
 }
@@ -122,8 +122,8 @@ model Product {
   price       Float    @default(1)
   currency    String   @default("SGD")
 
-  Brand        ProductBrand?   @relation(fields: [brand_id], references: [brand_id])
-  Category     ProductCategory @relation(fields: [category_id], references: [category_id])
+  Brand        ProductBrand?   @relation(fields: [brand_id], references: [brand_id], onDelete: Cascade)
+  Category     ProductCategory @relation(fields: [category_id], references: [category_id], onDelete: Cascade)
   CartItem     CartItem[]
   PurchaseItem PurchaseItem[]
 
@@ -135,9 +135,8 @@ model Product {
 }
 
 model ProductCategory {
-  category_id        Int    @id @default(autoincrement())
-  name               String
-  parent_category_id Int? // TODO: Implement this
+  category_id Int    @id @default(autoincrement())
+  name        String @unique
 
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
@@ -161,8 +160,8 @@ model CartItem {
   created_at   DateTime @default(now())
   updated_at   DateTime @updatedAt
 
-  User    User    @relation(fields: [user_id], references: [user_id])
-  Product Product @relation(fields: [product_id], references: [product_id])
+  User    User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Product Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@map("cart_item")
 }
@@ -179,8 +178,8 @@ model Purchase {
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  User         User           @relation(fields: [user_id], references: [user_id])
-  Address      Address        @relation(fields: [address_id], references: [address_id])
+  User         User           @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Address      Address        @relation(fields: [address_id], references: [address_id], onDelete: Cascade)
   PurchaseItem PurchaseItem[]
 
   @@map("purchase")
@@ -198,7 +197,7 @@ model PurchaseItem {
   updated_at DateTime @updatedAt
 
   Purchase Purchase @relation(fields: [purchase_id], references: [purchase_id], onDelete: Cascade)
-  Product  Product  @relation(fields: [product_id], references: [product_id])
+  Product  Product  @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@map("purchase_item")
 }
@@ -213,8 +212,8 @@ model Reviews {
   created_at  DateTime @default(now())
   updated_at  DateTime @updatedAt
 
-  User    User    @relation(fields: [user_id], references: [user_id])
-  Product Product @relation(fields: [product_id], references: [product_id])
+  User    User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Product Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@map("reviews")
 }
@@ -228,8 +227,8 @@ model Interaction {
   created_at     DateTime @default(now())
   updated_at     DateTime @updatedAt
 
-  User    User    @relation(fields: [user_id], references: [user_id])
-  Product Product @relation(fields: [product_id], references: [product_id])
+  User    User    @relation(fields: [user_id], references: [user_id], onDelete: Cascade)
+  Product Product @relation(fields: [product_id], references: [product_id], onDelete: Cascade)
 
   @@map("interaction")
 }

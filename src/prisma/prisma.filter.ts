@@ -25,7 +25,7 @@ export class PrismaFilter<T extends PrismaClientKnownRequestError>
     response.status(status).json({
       statusCode: status,
       error: true,
-      message: 'Something went wrong',
+      message: exception.meta,
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,
