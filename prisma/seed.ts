@@ -6,6 +6,7 @@
 import { PrismaService } from '../src/prisma/prisma.service';
 import { fakeAddress, fakeUser } from './fake-data';
 import { faker } from '@faker-js/faker';
+import { insertBulkProductsIntoRecommenderApi } from '../scripts/bindWithRecomenderApi';
 
 const countryListAlpha2 = {
   AF: 'Afghanistan',
@@ -399,6 +400,10 @@ async function main() {
     console.log('[4] Inserting products');
     await insertProducts();
     console.log('[4] Products inserted successfully');
+
+    console.log('[5] Inserting products into recommender API');
+    await insertBulkProductsIntoRecommenderApi();
+    console.log('[5] Products inserted into recommender API successfully');
   } catch (error) {
     console.error('Error inserting countries', error);
   } finally {

@@ -42,19 +42,20 @@ datasource db {
 // ================== User ==================
 
 model User {
-  user_id    Int       @id @default(autoincrement())
-  name String @default("Anonymous")
-  email      String    @unique
-  created_at DateTime  @default(now())
-  updated_at DateTime  @updatedAt
-  country_id Int
-  tiktok_open_id String @unique
-  Address    Address[]
+  user_id        Int       @id @default(autoincrement())
+  name           String    @default("Anonymous")
+  email          String    @unique
+  created_at     DateTime  @default(now())
+  updated_at     DateTime  @updatedAt
+  country_id     Int
+  tiktok_open_id String    @unique
+  Address        Address[]
 
-  country  Country    @relation(fields: [country_id], references: [country_id])
-  CartItem CartItem[]
-  Purchase Purchase[]
-  Reviews  Reviews[]
+  country     Country       @relation(fields: [country_id], references: [country_id])
+  CartItem    CartItem[]
+  Purchase    Purchase[]
+  Reviews     Reviews[]
+  Interaction Interaction[]
 
   @@map("user")
 }
@@ -84,13 +85,13 @@ model Address {
 // ================== Country ==================
 
 model Country {
-  country_id          Int                   @id @default(autoincrement())
-  country_code        String                @unique
-  country_name        String                @unique
-  created_at          DateTime              @default(now())
-  updated_at          DateTime              @updatedAt
-  user                User[]
-  Address             Address[]
+  country_id   Int       @id @default(autoincrement())
+  country_code String    @unique
+  country_name String    @unique
+  created_at   DateTime  @default(now())
+  updated_at   DateTime  @updatedAt
+  user         User[]
+  Address      Address[]
 
   @@map("country")
 }
@@ -110,24 +111,25 @@ model ProductImage {
 }
 
 model Product {
-  product_id          Int                   @id @default(autoincrement())
-  name                String
-  description         String
-  category_id         Int
-  brand_id            Int?
-  created_at          DateTime              @default(now())
-  updated_at          DateTime              @updatedAt
-  stock               Int                  @default(1)
-  price               Float               @default(1)
-  currency            String                @default("SGD")
+  product_id  Int      @id @default(autoincrement())
+  name        String
+  description String
+  category_id Int
+  brand_id    Int?
+  created_at  DateTime @default(now())
+  updated_at  DateTime @updatedAt
+  stock       Int      @default(1)
+  price       Float    @default(1)
+  currency    String   @default("SGD")
 
-  Brand          ProductBrand?    @relation(fields: [brand_id], references: [brand_id])
-  Category       ProductCategory  @relation(fields: [category_id], references: [category_id])
-  CartItem       CartItem[]
-  PurchaseItem   PurchaseItem[]
+  Brand        ProductBrand?   @relation(fields: [brand_id], references: [brand_id])
+  Category     ProductCategory @relation(fields: [category_id], references: [category_id])
+  CartItem     CartItem[]
+  PurchaseItem PurchaseItem[]
 
   ProductImage ProductImage[]
   Reviews      Reviews[]
+  Interaction  Interaction[]
 
   @@map("product")
 }
@@ -167,19 +169,19 @@ model CartItem {
 
 // ================== Purchases ==================
 model Purchase {
-  purchase_id        Int   @id @default(autoincrement())
-  user_id            Int
-  address_id         Int
-  tax_amount         Float
-  total_price        Float
-  final_price        Float
+  purchase_id Int   @id @default(autoincrement())
+  user_id     Int
+  address_id  Int
+  tax_amount  Float
+  total_price Float
+  final_price Float
 
   created_at DateTime @default(now())
   updated_at DateTime @updatedAt
 
-  User              User           @relation(fields: [user_id], references: [user_id])
-  Address           Address        @relation(fields: [address_id], references: [address_id])
-  PurchaseItem      PurchaseItem[]
+  User         User           @relation(fields: [user_id], references: [user_id])
+  Address      Address        @relation(fields: [address_id], references: [address_id])
+  PurchaseItem PurchaseItem[]
 
   @@map("purchase")
 }
@@ -215,4 +217,19 @@ model Reviews {
   Product Product @relation(fields: [product_id], references: [product_id])
 
   @@map("reviews")
+}
+
+// ================== Interaction ==================
+model Interaction {
+  interaction_id Int      @id @default(autoincrement())
+  user_id        Int
+  product_id     Int
+  interaction    String
+  created_at     DateTime @default(now())
+  updated_at     DateTime @updatedAt
+
+  User    User    @relation(fields: [user_id], references: [user_id])
+  Product Product @relation(fields: [product_id], references: [product_id])
+
+  @@map("interaction")
 }

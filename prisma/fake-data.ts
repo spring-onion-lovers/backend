@@ -208,3 +208,19 @@ export function fakeReviewsComplete() {
     updated_at: faker.date.anytime(),
   };
 }
+export function fakeInteraction() {
+  return {
+    interaction: faker.lorem.words(5),
+    updated_at: faker.date.anytime(),
+  };
+}
+export function fakeInteractionComplete() {
+  return {
+    interaction_id: faker.number.int(),
+    user_id: faker.number.int(),
+    product_id: faker.number.int(),
+    interaction: faker.lorem.words(5),
+    created_at: new Date(),
+    updated_at: faker.date.anytime(),
+  };
+}

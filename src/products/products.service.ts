@@ -3,6 +3,7 @@ import { CreateProductDto } from './dto/create-product.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { FindProductDto } from './dto/find-product.dto';
 import { omit } from 'lodash';
+import { InteractionType } from '../../utilities/interactionType';
 
 @Injectable()
 export class ProductsService {
@@ -66,7 +67,16 @@ export class ProductsService {
     });
   }
 
-  findOne(id: number) {
+  async findOne(user_id: number, id: number) {
+    // INJECT INTERACTION
+    await this.prismaService.interaction.create({
+      data: {
+        interaction: InteractionType.VIEW,
+        product_id: id,
+        user_id,
+      },
+    });
+
     return this.prismaService.product.findFirst({
       include: {
         Brand: true,

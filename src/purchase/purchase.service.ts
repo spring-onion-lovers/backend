@@ -1,25 +1,34 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreatePurchaseDto } from './dto/create-purchase.dto';
-import { UpdatePurchaseDto } from './dto/update-purchase.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { CartService } from '../cart/cart.service';
+import { InteractionType } from '../../utilities/interactionType';
 
 @Injectable()
 export class PurchaseService {
+  constructor(
+    private prisma: PrismaService,
+    private cartService: CartService,
+  ) {}
 
-  constructor(private prisma: PrismaService, private cartService: CartService) {}
+  async initiatePurchase(
+    user_id: number,
+    createPurchaseDto: CreatePurchaseDto,
+  ) {
+    const cartItems = await this.cartService.findCartItemsByCartItemIds(
+      user_id,
+      createPurchaseDto.cart_item_ids,
+    );
 
-  async initiatePurchase(user_id:number, createPurchaseDto: CreatePurchaseDto) {
-    const cartItems = await this.cartService.findCartItemsByCartItemIds(user_id, createPurchaseDto.cart_item_ids)
-
-
-    if(!cartItems || cartItems.length === 0){
-      throw new NotFoundException('Cart items not found. Cannot initiate purchase.')
+    if (!cartItems || cartItems.length === 0) {
+      throw new NotFoundException(
+        'Cart items not found. Cannot initiate purchase.',
+      );
     }
 
     const totalAmount = cartItems.reduce((previousValue, currentValue) => {
-      return currentValue.Product.price * currentValue.quantity
-    }, 0)
+      return currentValue.Product.price * currentValue.quantity;
+    }, 0);
 
     return this.prisma.$transaction(async (tx) => {
       await tx.purchase.create({
@@ -32,45 +41,55 @@ export class PurchaseService {
 
           PurchaseItem: {
             createMany: {
-              data: cartItems.map(cartItem => {
+              data: cartItems.map((cartItem) => {
                 return {
                   quantity: cartItem.quantity,
                   price: cartItem.Product.price,
-                  product_id: cartItem.product_id
-                }
-              })
-            }
-          }
-        }
-      })
+                  product_id: cartItem.product_id,
+                };
+              }),
+            },
+          },
+        },
+      });
 
-    })
+      // INJECT INTERACTION
+      for (const cartItem of cartItems) {
+        await tx.interaction.create({
+          data: {
+            interaction: InteractionType.PURCHASE,
+            product_id: cartItem.product_id,
+            user_id,
+          },
+        });
+      }
+    });
   }
 
   findAllPurchases(user_id: number) {
     return this.prisma.purchase.findMany({
-      where: {user_id},
+      where: { user_id },
       include: {
         PurchaseItem: {
           include: {
-            Product: true
-          }
-        }
-      }
-    })
+            Product: true,
+          },
+        },
+      },
+    });
   }
 
   findOne(user_id: number, id: number) {
     return this.prisma.purchase.findFirst({
-      where: {user_id, purchase_id: id},
+      where: { user_id, purchase_id: id },
       include: {
         PurchaseItem: {
           include: {
-            Product: true
-          }
-        }
-      }
-    })
+            Product: true,
+          },
+        },
+      },
+    });
   }
 
   // update(id: number, updatePurchaseDto: UpdatePurchaseDto) {

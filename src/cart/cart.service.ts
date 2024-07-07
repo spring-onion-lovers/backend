@@ -2,6 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { AddProductToCartDto } from './dto/add-product-to-cart.dto';
 import { UpdateCartDto } from './dto/update-cart.dto';
 import { PrismaService } from '../prisma/prisma.service';
+import { InteractionType } from '../../utilities/interactionType';
 
 @Injectable()
 export class CartService {
@@ -57,6 +58,15 @@ export class CartService {
           quantity: addProductToCartDto.quantity,
         });
       }
+
+      // INJECT INTERACTION
+      await this.prisma.interaction.create({
+        data: {
+          interaction: InteractionType.ADD_TO_CART,
+          product_id: addProductToCartDto.product_id,
+          user_id,
+        },
+      });
 
       return await this.prisma.cartItem.create({
         data: {

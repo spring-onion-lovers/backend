@@ -30,6 +30,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.15.1",
+    "axios": "^1.7.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
     "nestjs-zod": "^3.0.0",
