@@ -1,4 +1,10 @@
-import { Body, Controller, Post, UsePipes } from '@nestjs/common';
+import {
+  BadRequestException,
+  Body,
+  Controller,
+  Post,
+  UsePipes,
+} from '@nestjs/common';
 import { ZodValidationPipe } from 'nestjs-zod';
 import OKResponse from '../../utilities/OKResponse';
 import { JwtService } from '../jwt/jwt.service';
@@ -18,13 +24,46 @@ export class AuthController {
 
   @Post('/login')
   async loginUser(@Body() body: LoginAuthDto) {
-    const user = await this.authService.getUser(body);
+    try {
+      const data = await this.getUserInfoFromTikTok(body.tiktok_access_token);
 
-    // Generate token
-    const token = this.jwtService.generateToken({
-      id: user.user_id,
-    });
-    return new OKResponse(token, 'User logged in');
+      if (!data) {
+        throw new BadRequestException(
+          'Invalid access token',
+          'Error logging in user',
+        );
+      }
+
+      const tiktokUserId = data.open_id;
+
+      const user = await this.authService.getUserByTiktokUserId(tiktokUserId);
+
+      // Generate token
+      const token = this.jwtService.generateToken({
+        id: user.user_id,
+      });
+
+      return new OKResponse(token, 'User logged in');
+    } catch (error) {
+      throw new BadRequestException(error, 'Error logging in user');
+    }
+  }
+
+  private async getUserInfoFromTikTok(
+    access_token: string,
+  ): Promise<{ avatar_url; display_name; open_id; union_id }> {
+    const res = await fetch(
+      'https://open.tiktokapis.com/v2/user/info/?fields=open_id,union_id,avatar_url,display_name',
+      {
+        headers: {
+          Authorization: `Bearer ${access_token}`,
+        },
+      },
+    );
+
+    const data = await res.json();
+
+    return data.data.user || undefined;
   }
 
   // @Get('/callback')
@@ -43,38 +82,50 @@ export class AuthController {
    * @returns {Promise<{open_id: string, scope: string, access_token: string, expires_in: number, refresh_token: string, refresh_expires_in: number, token_type: string}>}
    */
   @Post('/tiktok/token')
-  async getTiktokToken(@Body() body: TokenExchangeDto): Promise<{
-    open_id: string;
-    scope: string;
-    access_token: string;
-    expires_in: number;
-    refresh_token: string;
-    refresh_expires_in: number;
-    token_type: string;
-  }> {
+  async getTiktokToken(@Body() body: TokenExchangeDto) {
     // https://developers.tiktok.com/doc/oauth-user-access-token-management
 
-    const { code, code_verifier, redirect_uri } = body;
-    const response = await fetch(
-      'https://open.tiktokapis.com/v2/oauth/token/',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: new URLSearchParams({
-          client_key: process.env.TIKTOK_DEV_CLIENT_KEY!,
-          client_secret: process.env.TIKTOK_DEV_CLIENT_SECRET!,
-          code,
-          grant_type: 'authorization_code',
-          redirect_uri,
-          code_verifier,
-        }),
-      },
-    );
+    const { code, redirect_uri } = body;
 
-    const data = await response.json();
-    return data;
+    try {
+      const response = await fetch(
+        'https://open.tiktokapis.com/v2/oauth/token/',
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            client_key: process.env.TIKTOK_DEV_CLIENT_KEY!,
+            client_secret: process.env.TIKTOK_DEV_CLIENT_SECRET!,
+            code,
+            grant_type: 'authorization_code',
+            redirect_uri,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (data.error)
+        throw new BadRequestException(data.error, 'Error getting TikTok token');
+
+      const { access_token } = data;
+
+      // Get user info
+      const userInfo = await this.getUserInfoFromTikTok(access_token);
+
+      return new OKResponse(
+        {
+          ...userInfo,
+          ...data,
+        },
+        `Token generated for ${userInfo.open_id}`,
+      );
+    } catch (error) {
+      console.error(error);
+      throw error;
+    }
   }
 
   // https://developers.tiktok.com/doc/login-kit-web/

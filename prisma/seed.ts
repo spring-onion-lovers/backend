@@ -328,6 +328,7 @@ async function insertUsers() {
     const country_id = Math.floor(Math.random() * 250) + 1;
     return {
       ...fakeUser(),
+      name: faker.person.fullName(),
       country_id,
       Address: {
         create: {

@@ -6,19 +6,20 @@ import Decimal from 'decimal.js';
 
 export function fakeUser() {
   return {
-    username: faker.internet.userName(),
     email: faker.internet.email(),
     updated_at: faker.date.anytime(),
+    tiktok_open_id: faker.lorem.words(5),
   };
 }
 export function fakeUserComplete() {
   return {
     user_id: faker.number.int(),
-    username: faker.internet.userName(),
+    name: 'Anonymous',
     email: faker.internet.email(),
     created_at: new Date(),
     updated_at: faker.date.anytime(),
     country_id: faker.number.int(),
+    tiktok_open_id: faker.lorem.words(5),
   };
 }
 export function fakeAddress() {

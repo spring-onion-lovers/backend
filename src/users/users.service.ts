@@ -1,14 +1,14 @@
-import { Injectable } from '@nestjs/common'
-import { PrismaService } from '../prisma/prisma.service'
-import { CreateUserDto } from './dto/create-user.dto'
+import { Injectable } from '@nestjs/common';
+import { PrismaService } from '../prisma/prisma.service';
+import { CreateUserDto } from './dto/create-user.dto';
 
 @Injectable()
 export class UsersService {
   constructor(private readonly prismaService: PrismaService) {}
 
   create(createUserDto: CreateUserDto) {
-    const userOnly: Omit<CreateUserDto, 'address'> = { ...createUserDto }
-    delete userOnly['address']
+    const userOnly: Omit<CreateUserDto, 'address'> = { ...createUserDto };
+    delete userOnly['address'];
 
     return this.prismaService.user.create({
       data: {
@@ -17,7 +17,7 @@ export class UsersService {
           create: createUserDto.address,
         },
       },
-    })
+    });
   }
 
   // findAll() {
@@ -37,7 +37,23 @@ export class UsersService {
         },
         country: true,
       },
-    })
+    });
+  }
+
+  findByTiktokUserId(tiktokUserId: string) {
+    return this.prismaService.user.findFirst({
+      where: {
+        tiktok_open_id: tiktokUserId,
+      },
+      include: {
+        Address: {
+          include: {
+            country: true,
+          },
+        },
+        country: true,
+      },
+    });
   }
 
   findByEmail(email: string) {
@@ -53,7 +69,7 @@ export class UsersService {
         },
         country: true,
       },
-    })
+    });
   }
 
   // update(id: number, updateUserDto: UpdateUserDto) {

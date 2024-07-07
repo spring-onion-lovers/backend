@@ -8,13 +8,11 @@ const SignUpSchema = z.object({
 });
 
 const LoginSchema = z.object({
-  email: z.string().email(),
-  password: z.string().min(8),
+  tiktok_access_token: z.string(),
 });
 
 const TokenExchangeSchema = z.object({
   code: z.string(),
-  code_verifier: z.string(),
   redirect_uri: z.string(),
 });
 

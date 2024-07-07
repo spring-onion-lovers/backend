@@ -1,14 +1,9 @@
-import {
-  ArgumentsHost,
-  Catch,
-  ExceptionFilter,
-  HttpException,
-} from '@nestjs/common';
+import { ArgumentsHost, Catch, ExceptionFilter } from '@nestjs/common';
 import { Request, Response } from 'express';
-import { PrismaClientValidationError } from '@prisma/client/runtime/library';
+import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
-@Catch(PrismaClientValidationError)
-export class PrismaFilter<T extends PrismaClientValidationError>
+@Catch(PrismaClientKnownRequestError)
+export class PrismaFilter<T extends PrismaClientKnownRequestError>
   implements ExceptionFilter
 {
   catch(exception: T, host: ArgumentsHost) {
@@ -17,10 +12,20 @@ export class PrismaFilter<T extends PrismaClientValidationError>
     const request = ctx.getRequest<Request>();
     const status = 500;
 
+    // Unique constraint violation
+    if (exception.code === 'P2002') {
+      return response.status(409).json({
+        statusCode: 409,
+        error: 'Conflict',
+        message: exception.meta,
+        timestamp: new Date().toISOString(),
+      });
+    }
+
     response.status(status).json({
       statusCode: status,
       error: true,
-      message: exception.message,
+      message: 'Something went wrong',
       timestamp: new Date().toISOString(),
       path: request.url,
       method: request.method,

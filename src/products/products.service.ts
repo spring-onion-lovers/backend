@@ -38,7 +38,7 @@ export class ProductsService {
           include: {
             User: {
               select: {
-                username: true,
+                name: true,
               },
             },
           },
@@ -75,7 +75,7 @@ export class ProductsService {
           include: {
             User: {
               select: {
-                username: true,
+                name: true,
               },
             },
           },

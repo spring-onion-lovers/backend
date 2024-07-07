@@ -43,11 +43,12 @@ datasource db {
 
 model User {
   user_id    Int       @id @default(autoincrement())
-  username   String    @unique
+  name String @default("Anonymous")
   email      String    @unique
   created_at DateTime  @default(now())
   updated_at DateTime  @updatedAt
   country_id Int
+  tiktok_open_id String @unique
   Address    Address[]
 
   country  Country    @relation(fields: [country_id], references: [country_id])
