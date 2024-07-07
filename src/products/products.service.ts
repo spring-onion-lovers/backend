@@ -56,11 +56,13 @@ export class ProductsService {
           {
             name: {
               contains: query.query || '',
+              mode: 'insensitive',
             },
           },
           {
             description: {
               contains: query.query || '',
+              mode: 'insensitive',
             },
           },
         ],

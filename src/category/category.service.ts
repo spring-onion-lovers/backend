@@ -16,6 +16,7 @@ export class CategoryService {
       where: {
         name: {
           contains: query,
+          mode: 'insensitive',
         },
       },
     });
