@@ -11,12 +11,12 @@ import { JwtGuard } from '../jwt/jwt.guard';
 import { UserId } from '../user-id/user-id.decorator';
 import OKResponse from '../../utilities/OKResponse';
 
-@UseGuards(JwtGuard)
 @Controller()
 export class RecommendationController {
   constructor(private readonly recommendationService: RecommendationService) {}
 
   @Get('/for-you')
+  @UseGuards(JwtGuard)
   async getForYouRecommendations(@UserId() user_id: number) {
     try {
       const data =

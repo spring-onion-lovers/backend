@@ -22,7 +22,6 @@ import { CreateReviewDto } from '../review/dto/create-review.dto';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
 @UsePipes(ZodValidationPipe)
-@UseGuards(JwtGuard)
 @Controller()
 export class ProductsController {
   constructor(
@@ -38,13 +37,14 @@ export class ProductsController {
 
   @Get()
   async findAll(@Query() findProductDto: FindProductDto) {
-    return new OKResponse(
-      await this.productsService.findAll(findProductDto),
-      'Products Found',
-    );
+    console.log(findProductDto);
+    const data = await this.productsService.findAll(findProductDto);
+    console.log(data);
+    return new OKResponse(data, 'Products Found');
   }
 
   @Get(':id')
+  @UseGuards(JwtGuard)
   async findOne(@UserId() userId: number, @Param('id') id: string) {
     const res = await this.productsService.findOne(userId, +id);
     if (!res) {
@@ -55,6 +55,7 @@ export class ProductsController {
   }
 
   @Post(':id/review')
+  @UseGuards(JwtGuard)
   async createReview(
     @UserId() userId: number,
     @Param('id') id: string,
