@@ -107,7 +107,7 @@ export class ProductsService {
       },
     });
 
-    await insertSingleInteractionIntoRecommenderApi({
+    void insertSingleInteractionIntoRecommenderApi({
       userId: user_id,
       interaction: InteractionType.VIEW,
       productId: id,
