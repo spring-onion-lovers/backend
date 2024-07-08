@@ -9,6 +9,7 @@
     "seed": "ts-node prisma/seed.ts"
   },
   "scripts": {
+    "db:sync": "prisma db push",
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
@@ -30,6 +31,7 @@
     "@nestjs/mapped-types": "*",
     "@nestjs/platform-express": "^10.0.0",
     "@prisma/client": "5.15.1",
+    "async-g-i-s": "^1.5.3",
     "axios": "^1.7.2",
     "jsonwebtoken": "^9.0.2",
     "lodash": "^4.17.21",
