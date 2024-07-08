@@ -104,14 +104,19 @@ export const insertSingleInteractionIntoRecommenderApi = async (data: {
   interaction: string;
   productId: number;
 }) => {
-  console.log('Sending interaction to recommender API');
+  try {
+    console.log('Sending interaction to recommender API');
 
-  const res = await axios.post(
-    `${RECOMMENDER_API_URL}/api/v1/interaction`,
-    data,
-  );
+    const res = await axios.post(
+      `${RECOMMENDER_API_URL}/api/v1/interaction`,
+      data,
+    );
 
-  console.log('Interaction sent');
-  console.log('Status', res.status);
-  console.log('Data', res.data);
+    console.log('Interaction sent');
+    console.log('Status', res.status);
+    console.log('Data', res.data);
+  } catch (error) {
+    console.log('Error in sending interaction to recommender API');
+    console.log('Error', error);
+  }
 };
