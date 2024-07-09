@@ -6,6 +6,7 @@
 import { PrismaService } from '../src/prisma/prisma.service';
 import { fakeAddress, fakeUser } from './fake-data';
 import { faker } from '@faker-js/faker';
+import { productsWithImages } from './products_seed';
 import {
   insertBulkInteractionsIntoRecommenderApi,
   insertBulkProductsIntoRecommenderApi,
@@ -365,6 +366,9 @@ async function insertUsers() {
 }
 
 async function insertInteractions() {
+  // Delete all existing interactions
+  await prisma.interaction.deleteMany();
+
   const allUsers = await prisma.user.findMany();
   const allProducts = await prisma.product.findMany();
 
@@ -386,37 +390,49 @@ async function insertInteractions() {
     };
   });
 
-  const promises = interactions.map((interaction) => {
+  const promises = interactions.map((interaction, index) => {
     return prisma.interaction.create({
       data: {
+        interaction_id: index + 1,
         ...interaction,
       },
     });
   });
 
-  return Promise.all(promises);
+  return await Promise.all(promises);
 }
 
 async function insertProducts() {
-  const NUMBERS_OF_PRODUCTS = 40;
-  const allCategories = await prisma.productCategory.findMany();
+  // const arr = Array.from({ length: NUMBERS_OF_PRODUCTS }, (item, index) => {
+  //   const randomCategoryId = Math.floor(Math.random() * allCategories.length);
+  //   return prisma.product.create({
+  //     data: {
+  //       product_id: index + 1,
+  //       category_id: allCategories[randomCategoryId].category_id,
+  //       currency: 'SGD',
+  //       name: faker.commerce.productName(),
+  //       description: faker.commerce.productDescription(),
+  //       price: faker.number.float({ min: 1, max: 150, fractionDigits: 2 }),
+  //       stock: 100,
+  //       ProductImage: {
+  //         create: {
+  //           image_url: 'https://via.placeholder.com/150',
+  //         },
+  //       },
+  //     },
+  //   });
+  // });
 
-  const arr = Array.from({ length: NUMBERS_OF_PRODUCTS }, (item, index) => {
-    const randomCategoryId = Math.floor(Math.random() * allCategories.length);
+  // Delete all existing products
+  await prisma.product.deleteMany();
+
+  const arr = productsWithImages.map((p, index) => {
+    console.log('inserting product', p.name);
+
     return prisma.product.create({
       data: {
         product_id: index + 1,
-        category_id: allCategories[randomCategoryId].category_id,
-        currency: 'SGD',
-        name: faker.commerce.productName(),
-        description: faker.commerce.productDescription(),
-        price: faker.number.float({ min: 1, max: 150, fractionDigits: 2 }),
-        stock: 100,
-        ProductImage: {
-          create: {
-            image_url: 'https://via.placeholder.com/150',
-          },
-        },
+        ...p,
       },
     });
   });
